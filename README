@@ -1,9 +1,7 @@
-This is your new Play application
+Overview
 =================================
 
-This file will be packaged with your application when using `activator dist`.
-
-There are several demonstration files available in this template.
+This project is to have a new mechanism to process sid metadatda using the spark api
 
 Controllers
 ===========
