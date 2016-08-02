@@ -3,25 +3,21 @@ import sbtrelease.Version
 
 name := """spark-data-processing"""
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
-
-scalaVersion := "2.11.7"
-
-val hbaseVersion = "1.2.0-cdh5.7.0"
+scalaVersion := "2.10.3"
 
 val sparkVersion = "1.6.0-cdh5.7.0"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" % "spark-core_2.10" % sparkVersion excludeAll(ExclusionRule("org.mortbay.jetty")),
-  "org.apache.hbase" % "hbase-server" % hbaseVersion excludeAll(ExclusionRule("org.mortbay.jetty"), ExclusionRule("stax")),
-  "org.apache.hbase" % "hbase-client" % hbaseVersion,
-  "org.apache.hbase" % "hbase-common" % hbaseVersion,
-  "org.apache.hbase" % "hbase-protocol" % hbaseVersion,
-  "com.typesafe.slick" %% "slick" % "2.1.0",
+  "org.apache.spark" % "spark-streaming_2.10" % sparkVersion,
+  "org.apache.spark" % "spark-streaming-kafka_2.10" % sparkVersion,
   "org.slf4j" % "slf4j-nop" % "1.6.4",
   "org.postgresql" % "postgresql" % "9.3-1102-jdbc4",
   "mysql" % "mysql-connector-java" % "5.1.12",
   "net.emergingthreats" % "et-common_2.10" % "latest.snapshot" changing
+)
+
+dependencyOverrides ++= Set(
+  "org.apache.kafka" % "kafka_2.10" % "0.9.0.1"
 )
 
 testOptions in Test += Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
