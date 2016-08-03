@@ -1,5 +1,7 @@
 import ReleaseTransformations._
 import sbtrelease.Version
+import AssemblyKeys._
+import sbt.Package.ManifestAttributes
 
 name := """spark-data-processing"""
 
@@ -8,8 +10,8 @@ scalaVersion := "2.10.3"
 val sparkVersion = "1.6.0-cdh5.7.0"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" % "spark-streaming_2.10" % sparkVersion,
-  "org.apache.spark" % "spark-streaming-kafka_2.10" % sparkVersion,
+  "org.apache.spark" % "spark-streaming_2.10" % sparkVersion excludeAll(ExclusionRule("org.mortbay.jetty")),
+  "org.apache.spark" % "spark-streaming-kafka_2.10" % sparkVersion excludeAll(ExclusionRule("org.mortbay.jetty")),
   "org.slf4j" % "slf4j-nop" % "1.6.4",
   "org.postgresql" % "postgresql" % "9.3-1102-jdbc4",
   "mysql" % "mysql-connector-java" % "5.1.12",
@@ -19,6 +21,18 @@ libraryDependencies ++= Seq(
 dependencyOverrides ++= Set(
   "org.apache.kafka" % "kafka_2.10" % "0.9.0.1"
 )
+
+assemblySettings
+
+mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
+{
+  case m if m.toLowerCase.matches("meta-inf/.*\\.sf$") => MergeStrategy.discard
+  case PathList("META-INF", "MANIFEST.MF", xs @ _*) => MergeStrategy.discard
+  case PathList(ps @ _*) => MergeStrategy.first
+  case r if r.equalsIgnoreCase("reference.conf") => MergeStrategy.concat
+  case x => old(x)
+}
+}
 
 testOptions in Test += Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
 
