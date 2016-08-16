@@ -25,3 +25,5 @@ Running
   com.proofpoint.streaming.StreamingContextImpl  target/scala-2.10/spark-data-processing-assembly-1.0.jar.
 
 - Publish messages on kafka and receive these messages on the spark stream.
+
+- Navigate to http://localhost:4040. You can see the list and status of jobs running.

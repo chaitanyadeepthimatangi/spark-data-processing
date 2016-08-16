@@ -10,12 +10,20 @@ scalaVersion := "2.10.3"
 val sparkVersion = "1.6.0-cdh5.7.0"
 
 libraryDependencies ++= Seq(
+  jdbc,
+  anorm,
+  cache,
+  "joda-time" % "joda-time" % "2.3",
   "org.apache.spark" % "spark-streaming_2.10" % sparkVersion excludeAll(ExclusionRule("org.mortbay.jetty")),
-  "org.apache.spark" % "spark-streaming-kafka_2.10" % sparkVersion excludeAll(ExclusionRule("org.mortbay.jetty")),
+  "org.apache.spark" % "spark-streaming-kafka_2.10" % sparkVersion excludeAll(
+														ExclusionRule("org.mortbay.jetty")),
   "org.slf4j" % "slf4j-nop" % "1.6.4",
-  "org.postgresql" % "postgresql" % "9.3-1102-jdbc4",
+  "org.postgresql" % "postgresql" % "9.4-1205-jdbc41",
   "mysql" % "mysql-connector-java" % "5.1.12",
-  "net.emergingthreats" % "et-common_2.10" % "latest.snapshot" changing
+  "com.typesafe.slick" %% "slick" % "3.0.0",
+  "org.slf4j" % "slf4j-nop" % "1.6.4",
+  "net.emergingthreats" % "et-common_2.10" % "latest.snapshot" changing,
+  "net.emergingthreats" % "et-common-play_2.10" % "latest.snapshot" changing
 )
 
 dependencyOverrides ++= Set(
@@ -29,7 +37,6 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
   case m if m.toLowerCase.matches("meta-inf/.*\\.sf$") => MergeStrategy.discard
   case PathList("META-INF", "MANIFEST.MF", xs @ _*) => MergeStrategy.discard
   case PathList(ps @ _*) => MergeStrategy.first
-  case r if r.equalsIgnoreCase("reference.conf") => MergeStrategy.concat
   case x => old(x)
 }
 }
